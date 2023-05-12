@@ -24,9 +24,7 @@ def get_version_tag(version):
 
 
 def get_version_port_version(version):
-    if 'port-version' in version:
-        return version['port-version']
-    return 0
+    return version['port-version'] if 'port-version' in version else 0
 
 
 def generate_baseline():
@@ -60,9 +58,7 @@ def generate_baseline():
                     }
             except json.JSONDecodeError as e:
                 print(f'Error: Decoding {port_file_path}\n{e}\n')
-    baseline_object = {}
-    baseline_object['default'] = baseline_entries
-
+    baseline_object = {'default': baseline_entries}
     os.makedirs(VERSIONS_DB_DIRECTORY, exist_ok=True)
     baseline_path = os.path.join(VERSIONS_DB_DIRECTORY, 'baseline.json')
     with open(baseline_path, 'w') as baseline_file:

@@ -22,7 +22,7 @@ def get_current_git_ref():
                             encoding='utf-8')
     if output.returncode == 0:
         return output.stdout.strip()
-    print(f"Failed to get git ref:", output.stderr.strip(), file=sys.stderr)
+    print("Failed to get git ref:", output.stderr.strip(), file=sys.stderr)
     return None
 
 

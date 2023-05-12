@@ -15,6 +15,8 @@ if os.path.isfile(f"libtensorflow_framework.{version}.dylib-2.params"):
         parts = set(parts)
         with open(f"libtensorflow{lib_suffix}.{version}.dylib-2.params", "r") as f_in:
             for line in f_in:
-                if line.startswith("-Wl,-force_load,"):
-                    if line[16:] not in parts:
-                        f_out.write(line[16:])
+                if (
+                    line.startswith("-Wl,-force_load,")
+                    and line[16:] not in parts
+                ):
+                    f_out.write(line[16:])

@@ -15,12 +15,10 @@ with open(sys.argv[1], "r") as f_in:
             if line.startswith("(cd"):
                 # new command, reset
                 env = [line]
+            elif m1 := p_linker.match(line):
+                m2 = p_cd.match(env[0])
+                f_out.write(m2[1] + "\n")
+                line = f'"{m1[1]}ar" rcs {m1[2][1:-9].replace(".so", ".a")} {m1[2].replace(".so", ".a")}\n'
+                f_out.write(line)
             else:
-                m1 = p_linker.match(line)
-                if m1:
-                    m2 = p_cd.match(env[0])
-                    f_out.write(m2.group(1) + "\n")
-                    line = f'"{m1.group(1)}ar" rcs {m1.group(2)[1:-9].replace(".so", ".a")} {m1.group(2).replace(".so", ".a")}\n'
-                    f_out.write(line)
-                else:
-                    env.append(line)
+                env.append(line)

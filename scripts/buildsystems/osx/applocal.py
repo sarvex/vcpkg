@@ -145,10 +145,13 @@ def normalize_qtplugin_name(filename):
 
     # from qtlib, forge 2 path :
     #  - absolute path of qt lib in bundle,
-    abspath = os.path.normpath(templ.safe_substitute(
-        prefix=os.path.dirname(GlobalConfig.exepath) + '/..',
-        plugintype=qtplugintype,
-        pluginname=qtpluginname))
+    abspath = os.path.normpath(
+        templ.safe_substitute(
+            prefix=f'{os.path.dirname(GlobalConfig.exepath)}/..',
+            plugintype=qtplugintype,
+            pluginname=qtpluginname,
+        )
+    )
 
     #  - and rpath containing @executable_path, relative to exepath
     rpath = templ.safe_substitute(
@@ -188,10 +191,13 @@ def normalize_qtlib_name(filename):
 
     # from qtlib, forge 2 path :
     #  - absolute path of qt lib in bundle,
-    abspath = os.path.normpath(templ.safe_substitute(
-        prefix=os.path.dirname(GlobalConfig.exepath) + '/..',
-        qtlib=qtlib,
-        qtversion=qtversion))
+    abspath = os.path.normpath(
+        templ.safe_substitute(
+            prefix=f'{os.path.dirname(GlobalConfig.exepath)}/..',
+            qtlib=qtlib,
+            qtversion=qtversion,
+        )
+    )
 
     #  - and rpath containing @executable_path, relative to exepath
     rpath = templ.safe_substitute(
@@ -228,9 +234,12 @@ def normalize_loaderpath_name(filename):
 
     # from loaderpath, forge 2 path :
     #  - absolute path of qt lib in bundle,
-    abspath = os.path.normpath(templ.safe_substitute(
-        prefix=os.path.dirname(GlobalConfig.exepath) + '/..',
-        loaderpathlib=loaderpathlib))
+    abspath = os.path.normpath(
+        templ.safe_substitute(
+            prefix=f'{os.path.dirname(GlobalConfig.exepath)}/..',
+            loaderpathlib=loaderpathlib,
+        )
+    )
 
     #  - and rpath containing @executable_path, relative to exepath
     rpath = templ.safe_substitute(
@@ -255,7 +264,7 @@ def fix_dependency(binary, dep):
                                  format(qtname), qtname)
     elif is_loader_path_lib(dep):
         qtname, dep_abspath, dep_rpath = normalize_loaderpath_name(dep)
-        qtnamesrc = os.path.join(GlobalConfig.qtpath + '/lib', qtname)
+        qtnamesrc = os.path.join(f'{GlobalConfig.qtpath}/lib', qtname)
     else:
         return True
 
@@ -316,9 +325,7 @@ def fix_dependency(binary, dep):
     else:
         GlobalConfig.logger.debug('{0} is at correct location in bundle'.format(qtname))
 
-    if dep_ok:
-        return fix_binary(dep_abspath)
-    return False
+    return fix_binary(dep_abspath) if dep_ok else False
 
 
 def fix_binary(binary):
@@ -346,7 +353,7 @@ def fix_main_binaries():
         list the main binaries of the app bundle and fix them
     """
     # deduce bundle path
-    bundlepath = os.path.sep.join(GlobalConfig.exepath.split(os.path.sep)[0:-3])
+    bundlepath = os.path.sep.join(GlobalConfig.exepath.split(os.path.sep)[:-3])
 
     # fix main binary
     GlobalConfig.logger.info('fixing executable \'{0}\''.format(GlobalConfig.exepath))
